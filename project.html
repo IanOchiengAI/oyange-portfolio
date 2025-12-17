@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail | OYANGE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{colors:{brand:{dark:'#113827',gold:'#D4AF37',bone:'#F9F9F7'}},fontFamily:{display:['Syne'],body:['Inter']}}}}</script>
+    <style>body{cursor:none}.bg-noise{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")}.cursor-dot,.cursor-outline{position:fixed;top:0;left:0;transform:translate(-50%,-50%);border-radius:50%;z-index:9999;pointer-events:none}.cursor-dot{width:8px;height:8px;background-color:#D4AF37}.cursor-outline{width:40px;height:40px;border:1px solid #113827;transition:.2s}body.hovering .cursor-outline{width:60px;height:60px;background-color:rgba(212,175,55,.1);border-color:#D4AF37}.fade-in-up{opacity:0;transform:translateY(20px);animation:fadeInUp .8s forwards}@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}</style>
+</head>
+<body class="bg-brand-bone text-brand-dark">
+    <div class="bg-noise"></div><div class="cursor-dot" id="cursor-dot"></div><div class="cursor-outline" id="cursor-outline"></div>
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-dark flex flex-col items-center justify-center transition-transform duration-700 ease-in-out"></div>
+    <nav class="fixed top-0 left-0 w-full z-50 py-8 px-8 flex justify-between mix-blend-difference text-brand-bone">
+        <a href="index.html" class="font-display font-bold text-xl tracking-widest interactive-element">OYANGE</a>
+        <a href="index.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold interactive-element">Close</a>
+    </nav>
+    <header class="w-full h-[80vh] relative"><img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1600" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 p-8 md:p-16"><h1 class="font-display text-6xl md:text-8xl text-white font-bold uppercase tracking-tighter fade-in-up" style="animation-delay:.2s">Nairobi Noir</h1></div></header>
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-24">
+        <div class="grid md:grid-cols-12 gap-12">
+            <div class="md:col-span-4 fade-in-up" style="animation-delay:.4s"><p class="font-body text-sm leading-relaxed">To capture the juxtaposition of modern architecture and traditional textures.</p></div>
+            <div class="md:col-span-8 fade-in-up" style="animation-delay:.6s"><p class="font-display text-2xl md:text-3xl">"We wanted to strip away the color to reveal the raw geometry."</p></div>
+        </div>
+        <div class="mt-24 grid md:grid-cols-2 gap-8">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" class="w-full aspect-[3/4] object-cover fade-in-up interactive-element" style="animation-delay:.8s">
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800" class="w-full aspect-[3/4] object-cover fade-in-up interactive-element" style="animation-delay:1s">
+        </div>
+        <div class="mt-32 border-t border-brand-dark/10 pt-16 flex justify-between items-center">
+            <a href="index.html" class="text-xs font-body uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">Back to Home</a>
+            <a href="#" class="group text-right interactive-element"><span class="block text-xs font-body text-brand-gold uppercase tracking-widest mb-1">Next Project</span><span class="font-display text-4xl font-bold group-hover:underline decoration-brand-gold underline-offset-4">The Elder</span></a>
+        </div>
+    </main>
+    <footer class="bg-brand-dark text-white py-12 px-8 text-center"><p class="text-[10px] font-body text-white/40 uppercase tracking-widest">&copy; 2025 OYANGE Archive.</p></footer>
+    <script src="js/main.js"></script>
+    <script>window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').style.transform='translateY(-100%)'},500)});const cdp=document.getElementById('cursor-dot'),cop=document.getElementById('cursor-outline');window.addEventListener('mousemove',e=>{if(cdp){cdp.style.left=`${e.clientX}px`;cdp.style.top=`${e.clientY}px`;}if(cop){cop.animate({left:`${e.clientX}px`,top:`${e.clientY}px`},{duration:500,fill:"forwards"})}});</script>
+</body>
+</html>
