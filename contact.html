@@ -4,66 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | OYANGE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            colors: { brand: { dark: '#113827', gold: '#D4AF37', bone: '#F9F9F7' } },
+            colors: { brand: { dark: '#003E29', gold: '#D4AF37', bone: '#F3F4F1' } },
             fontFamily: { display: ['Syne', 'sans-serif'], body: ['Inter', 'sans-serif'] },
-            animation: { 'fade-in': 'fadeIn 1s ease-out forwards' },
-            keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+            animation: { 'loader-bar': 'loadProgress 1s ease-out forwards', 'fade-up': 'fadeUp 1s ease-out forwards' },
+            keyframes: { 
+                loadProgress: { '0%': { width: '0%' }, '100%': { width: '100%' } },
+                fadeUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } 
+            },
+            borderRadius: { DEFAULT: '2px' }
           }
         }
       }
     </script>
     <style>
         body { cursor: none; -webkit-font-smoothing: antialiased; }
-        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; will-change: transform, left, top; }
-        .cursor-dot { width: 8px; height: 8px; background-color: #D4AF37; z-index: 9999; }
-        .cursor-outline { width: 40px; height: 40px; border: 1px solid #113827; transition: width 0.2s, height 0.2s; z-index: 9998; }
+        @media (max-width: 768px) { body { cursor: auto; } .cursor-dot, .cursor-outline { display: none !important; } }
+        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; }
+        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: all 0.1s ease-out; }
         body.hovering .cursor-outline { width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1); border-color: #D4AF37; }
-        input, textarea { background: transparent; transition: all 0.3s; border-radius: 0; }
-        input:focus, textarea:focus { outline: none; border-color: #D4AF37; padding-left: 10px; }
+        input, textarea, select { background: transparent; transition: all 0.3s; border-radius: 0; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #D4AF37; padding-left: 10px; }
     </style>
 </head>
-<body class="bg-brand-bone text-brand-dark selection:bg-brand-gold selection:text-white flex flex-col min-h-screen">
-    <nav class="w-full py-8 px-8 flex justify-between items-center fixed top-0 left-0 bg-brand-bone/90 backdrop-blur-sm z-50">
-        <a href="index.html" class="font-display font-bold text-xl tracking-widest interactive-element">OYANGE</a>
-        <div class="flex gap-8">
-            <a href="index.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">Work</a>
-            <a href="about.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">About</a>
+<body class="bg-brand-bone text-brand-dark selection:bg-brand-gold selection:text-white">
+    <div class="bg-noise"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center transition-opacity duration-800 ease-out">
+        <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest mb-8">OYANGE</h1>
+        <div class="w-64 h-[2px] bg-brand-dark/10 rounded-full overflow-hidden"><div class="h-full bg-brand-gold animate-loader-bar"></div></div>
+    </div>
+
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+        <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2 transform transition-transform hover:scale-[1.02] interactive-element">
+            <a href="index.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">Work</a>
+            <a href="about.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">About</a>
+            <a href="contact.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">Contact</a>
         </div>
     </nav>
-    <main class="flex-grow flex flex-col justify-center max-w-7xl mx-auto w-full px-6 md:px-12 pt-32 pb-16 animate-fade-in">
+
+    <main class="flex-grow flex flex-col justify-center max-w-7xl mx-auto w-full px-6 md:px-12 pt-32 pb-16 animate-fade-up">
         <div class="mb-16 md:mb-24">
              <h1 class="font-display text-5xl md:text-7xl font-bold mb-6">Contact</h1>
-             <p class="font-body text-lg md:text-xl text-brand-dark/70 max-w-2xl leading-relaxed">Let's create something beautiful together. Reach out for collaborations, commissions, or just to say hello.</p>
+             <p class="font-body text-lg md:text-xl text-brand-dark/70 max-w-2xl leading-relaxed">Let's create something beautiful together. Reach out for collaborations.</p>
         </div>
         <div class="grid md:grid-cols-12 gap-12 md:gap-24 items-start">
-             <div class="md:col-span-7 order-2 md:order-1">
+             <div class="md:col-span-7">
                 <form class="space-y-10" onsubmit="event.preventDefault(); alert('Message sent!');">
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Name</label><input type="text" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element" placeholder="John Doe"></div>
                         <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Email</label><input type="email" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element" placeholder="john@example.com"></div>
                     </div>
-                    <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Subject</label><select class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element bg-transparent appearance-none rounded-none"><option>Project Inquiry</option><option>Press / Media</option><option>Collaboration</option><option>Other</option></select></div>
+                    <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Subject</label><select class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element bg-transparent appearance-none rounded-none"><option>Project Inquiry</option><option>Press / Media</option><option>Collaboration</option></select></div>
                     <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Message</label><textarea rows="4" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-body text-lg interactive-element resize-none leading-relaxed" placeholder="Tell us about your project..."></textarea></div>
-                    <div class="pt-6"><button type="submit" class="group relative px-10 py-4 bg-brand-dark text-white font-body text-xs uppercase tracking-[0.2em] interactive-element hover:bg-brand-gold transition-colors w-full md:w-auto">Send Message</button></div>
+                    <div class="pt-6"><button type="submit" class="group relative px-10 py-4 bg-brand-dark text-white font-body text-xs uppercase tracking-[0.2em] interactive-element hover:bg-brand-gold transition-colors w-full md:w-auto" data-magnetic="true">Send Message</button></div>
                 </form>
              </div>
-            <div class="md:col-span-5 space-y-16 order-1 md:order-2">
-                <div><span class="block text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-4 font-bold">Location</span><p class="font-display text-2xl md:text-3xl">Nairobi, Kenya</p><p class="font-body text-sm text-brand-dark/60 mt-2">Available for travel worldwide</p></div>
-                <div><span class="block text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-6 font-bold">Connect</span><div class="flex gap-8 items-center"><a href="mailto:hello@oyange.com" class="group interactive-element transition-transform hover:scale-110"><svg class="w-6 h-6 text-brand-dark group-hover:text-brand-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a><a href="#" class="group interactive-element transition-transform hover:scale-110"><svg class="w-6 h-6 text-brand-dark group-hover:text-brand-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" stroke-width="1.5"></rect><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path></svg></a><a href="#" class="group interactive-element transition-transform hover:scale-110"><svg class="w-6 h-6 text-brand-dark group-hover:text-brand-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path></svg></a><a href="#" class="group interactive-element transition-transform hover:scale-110"><svg class="w-6 h-6 text-brand-dark group-hover:text-brand-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path><circle cx="4" cy="4" r="2" stroke-width="1.5"></circle></svg></a></div></div>
-                <div class="bg-white border border-brand-dark/5 p-6 shadow-sm"><span class="flex items-center gap-2 text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-3 font-bold"><span class="w-2 h-2 bg-brand-gold rounded-full animate-pulse"></span>Currently Available</span><p class="font-body text-sm text-brand-dark/70 leading-relaxed">Open to new projects and collaborations. <br>Response time: 24-48 hours.</p></div>
+            <div class="md:col-span-5 space-y-16">
+                <div><span class="block text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-4 font-bold">Location</span><p class="font-display text-2xl md:text-3xl">Nairobi, Kenya</p></div>
+                <div class="bg-white border border-brand-dark/5 p-6 shadow-sm"><span class="flex items-center gap-2 text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-3 font-bold"><span class="w-2 h-2 bg-brand-gold rounded-full animate-pulse"></span>Available</span><p class="font-body text-sm text-brand-dark/70">Response time: 24-48 hours.</p></div>
             </div>
         </div>
     </main>
-    <footer class="py-8 px-8 text-center md:text-left border-t border-brand-dark/5 mx-8 mt-12"><div class="flex flex-col md:flex-row justify-between items-center text-[10px] font-body text-brand-dark/40 uppercase tracking-widest"><p>&copy; 2025 OYANGE Archive.</p><p class="mt-2 md:mt-0">Design by Atlas</p></div></footer>
-    <div class="bg-noise"></div><div class="cursor-dot" id="cursor-dot"></div><div class="cursor-outline" id="cursor-outline"></div>
     <script src="js/main.js"></script>
-    <script>const cdc=document.getElementById('cursor-dot'),coc=document.getElementById('cursor-outline');window.addEventListener('mousemove',e=>{if(cdc){cdc.style.left=e.clientX+'px';cdc.style.top=e.clientY+'px';}if(coc){coc.animate({left:e.clientX+'px',top:e.clientY+'px'},{duration:500,fill:"forwards"})}});</script>
 </body>
 </html>
