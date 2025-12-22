@@ -10,92 +10,67 @@
       tailwind.config = {
         theme: {
           extend: {
-            colors: { brand: { dark: '#113827', gold: '#D4AF37', bone: '#F9F9F7' } },
+            colors: { brand: { dark: '#003E29', gold: '#D4AF37', bone: '#F3F4F1' } },
             fontFamily: { display: ['Syne', 'sans-serif'], body: ['Inter', 'sans-serif'] },
-            animation: { 'fade-in-up': 'fadeInUp 1s ease-out forwards' },
-            keyframes: { fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+            animation: { 'loader-bar': 'loadProgress 1s ease-out forwards', 'fade-up': 'fadeUp 1s ease-out forwards' },
+            keyframes: { 
+                loadProgress: { '0%': { width: '0%' }, '100%': { width: '100%' } },
+                fadeUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } 
+            },
+            borderRadius: { DEFAULT: '2px' }
           }
         }
       }
     </script>
     <style>
         body { cursor: none; -webkit-font-smoothing: antialiased; }
-        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
-        .cursor-dot { width: 8px; height: 8px; background-color: #D4AF37; }
-        .cursor-outline { width: 40px; height: 40px; border: 1px solid #113827; transition: width 0.2s, height 0.2s; }
+        @media (max-width: 768px) { body { cursor: auto; } .cursor-dot, .cursor-outline { display: none !important; } }
+        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; }
+        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: all 0.1s ease-out; }
         body.hovering .cursor-outline { width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1); border-color: #D4AF37; }
-        .reveal-1 { animation-delay: 0.2s; }
-        .reveal-2 { animation-delay: 0.4s; }
-        .reveal-3 { animation-delay: 0.6s; }
+        .reveal-1 { animation-delay: 0.2s; } .reveal-2 { animation-delay: 0.4s; } .reveal-3 { animation-delay: 0.6s; }
     </style>
 </head>
 <body class="bg-brand-bone text-brand-dark selection:bg-brand-gold selection:text-white">
-
     <div class="bg-noise"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
-    <nav class="fixed top-0 left-0 w-full z-50 py-8 px-8 flex justify-between items-center mix-blend-difference text-brand-bone">
-        <a href="index.html" class="font-display font-bold text-xl tracking-widest interactive-element">OYANGE</a>
-        <div class="flex gap-8">
-            <a href="index.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">Work</a>
-            <a href="contact.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">Contact</a>
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center transition-opacity duration-800 ease-out">
+        <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest mb-8">OYANGE</h1>
+        <div class="w-64 h-[2px] bg-brand-dark/10 rounded-full overflow-hidden"><div class="h-full bg-brand-gold animate-loader-bar"></div></div>
+    </div>
+
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+        <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2 transform transition-transform hover:scale-[1.02] interactive-element">
+            <a href="index.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">Work</a>
+            <a href="about.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">About</a>
+            <a href="contact.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">Contact</a>
         </div>
     </nav>
 
     <main class="min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
         <div class="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
-            <div class="relative opacity-0 animate-fade-in-up reveal-1">
-                <div class="aspect-[3/4] overflow-hidden rounded-sm interactive-element">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200" alt="Photographer Portrait" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0">
+            <div class="relative opacity-0 animate-fade-up reveal-1">
+                <div class="aspect-[3/4] overflow-hidden rounded-sm interactive-element bg-brand-dark/10">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 grayscale hover:grayscale-0">
                 </div>
-                <div class="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-brand-dark/50 font-body">
-                    <span>Nairobi Based</span>
-                    <span>Est. 2025</span>
-                </div>
+                <div class="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-brand-dark/50 font-body"><span>Nairobi Based</span><span>Est. 2025</span></div>
             </div>
             <div class="pt-8 md:pt-24 space-y-12">
-                <div class="opacity-0 animate-fade-in-up reveal-2">
-                    <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">
-                        THE EYE <br/> 
-                        <span class="text-brand-gold italic">BEHIND</span> THE LENS.
-                    </h1>
+                <div class="opacity-0 animate-fade-up reveal-2">
+                    <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">THE EYE <br/> <span class="text-brand-gold italic">BEHIND</span> THE LENS.</h1>
                     <div class="w-24 h-[1px] bg-brand-dark"></div>
                 </div>
-
-                <div class="opacity-0 animate-fade-in-up reveal-3 space-y-6 font-body text-lg text-brand-dark/80 leading-relaxed">
+                <div class="opacity-0 animate-fade-up reveal-3 space-y-6 font-body text-lg text-brand-dark/80 leading-relaxed">
                     <p>Photography is not merely about capturing light; it is about preserving the weight of a moment.</p>
                     <p>We build visual archives for brands who understand the value of legacy.</p>
                 </div>
-
-                <div class="pt-8 opacity-0 animate-fade-in-up reveal-3">
-                    <a href="contact.html" class="inline-block border-b border-brand-gold pb-1 font-body text-xs uppercase tracking-widest text-brand-gold hover:text-brand-dark transition-colors interactive-element">
-                        Start a Conversation
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-32 border-t border-brand-dark/10 pt-16 opacity-0 animate-fade-in-up reveal-3">
-            <h3 class="font-body text-xs uppercase tracking-[0.2em] mb-8 text-brand-dark/50">Selected Clientele</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="font-display text-xl interactive-element hover:text-brand-gold transition-colors">Vogue Africa</div>
-                <div class="font-display text-xl interactive-element hover:text-brand-gold transition-colors">National Museum</div>
-                <div class="font-display text-xl interactive-element hover:text-brand-gold transition-colors">Conservation Int.</div>
-                <div class="font-display text-xl interactive-element hover:text-brand-gold transition-colors">Architectural Digest</div>
             </div>
         </div>
     </main>
 
     <script src="js/main.js"></script>
-    <script>
-        const cda = document.getElementById('cursor-dot');
-        const coa = document.getElementById('cursor-outline');
-        window.addEventListener('mousemove', (e) => {
-            if(cda) { cda.style.left = e.clientX + 'px'; cda.style.top = e.clientY + 'px'; }
-            if(coa) { coa.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" }); }
-        });
-    </script>
 </body>
 </html>
