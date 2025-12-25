@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OYANGE | Visual Archive</title>
+    
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP (The Physics Engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- TAILWIND -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -20,83 +28,115 @@
                     gray: '#E5E5E5'
                 } 
             },
-            fontFamily: { display: ['Syne', 'sans-serif'], body: ['Inter', 'sans-serif'] },
-            animation: { 'loader-bar': 'loadProgress 1.5s ease-out forwards', 'float': 'float 6s ease-in-out infinite' },
-            keyframes: { 
-                loadProgress: { '0%': { width: '0%' }, '100%': { width: '100%' } },
-                float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+            fontFamily: { 
+                display: ['Syne', 'sans-serif'], 
+                body: ['Inter', 'sans-serif'] 
             },
             borderRadius: { DEFAULT: '2px', 'sm': '2px', 'md': '4px', 'lg': '6px', 'full': '9999px' }
           }
         }
       }
     </script>
+
     <style>
-        body { cursor: none; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; }
-        @media (max-width: 768px) { body { cursor: auto; } .cursor-dot, .cursor-outline { display: none !important; } }
-        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; }
-        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: all 0.1s ease-out; }
-        body.hovering .cursor-dot { width: 4px; height: 4px; }
+        /* CORE STYLES */
+        body { cursor: none; -webkit-font-smoothing: antialiased; background-color: #F3F4F1; }
+        
+        /* MOBILE OVERRIDE */
+        @media (max-width: 768px) { 
+            body { cursor: auto; } 
+            .cursor-dot, .cursor-outline { display: none !important; } 
+        }
+        
+        /* NOISE TEXTURE (Midjourney/Apple Vibe) */
+        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        
+        /* CURSOR */
+        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
+        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
         body.hovering .cursor-outline { width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1); border-color: #D4AF37; }
+        
+        /* HIDE SCROLLBAR */
         body::-webkit-scrollbar { width: 0px; background: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .perspective-container { perspective: 1000px; }
-        .hero-card-wrapper { will-change: transform, opacity; transform-style: preserve-3d; backface-visibility: hidden; }
-        .velocity-col { will-change: transform; transition: transform 0.1s linear; }
+        
+        /* HERO & GRID PREP */
+        .hero-perspective { perspective: 1000px; }
+        .hero-card-wrapper { will-change: transform; }
+        
+        /* LOADER ANIMATION */
+        .loader-bar { width: 0%; height: 100%; background-color: #D4AF37; transition: width 0.5s linear; }
     </style>
 </head>
 <body class="bg-brand-bone text-brand-dark overflow-x-hidden selection:bg-brand-gold selection:text-white relative">
+
+    <!-- OVERLAYS -->
     <div class="bg-noise"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
-    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center transition-opacity duration-800 ease-out">
-        <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest mb-8">OYANGE</h1>
-        <div class="w-64 h-[2px] bg-brand-dark/10 rounded-full overflow-hidden"><div class="h-full bg-brand-gold animate-loader-bar"></div></div>
+    <!-- LOADER -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center">
+        <div class="overflow-hidden mb-8">
+            <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest translate-y-full" id="loader-text">OYANGE</h1>
+        </div>
+        <div class="w-64 h-[2px] bg-brand-dark/10 rounded-full overflow-hidden">
+            <div class="loader-bar" id="loader-bar"></div>
+        </div>
     </div>
 
-    <!-- DYNAMIC ISLAND NAV -->
-    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-        <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2 transform transition-transform hover:scale-[1.02] interactive-element">
+    <!-- DYNAMIC ISLAND NAV (Bottom Fixed) -->
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-20">
+        <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2">
             <a href="index.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">Work</a>
             <a href="about.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">About</a>
             <a href="contact.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">Contact</a>
         </div>
     </nav>
 
-    <header class="relative w-full h-[200vh] bg-brand-bone perspective-container flex items-start justify-center overflow-hidden" id="hero-section">
-        <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden">
-            <div class="text-center transform scale-90 opacity-0 transition-all duration-1000 origin-center z-0" id="brand-reveal">
-                <h1 class="font-display font-black text-[13vw] md:text-[11rem] text-brand-dark tracking-tighter uppercase leading-none select-none">OYANGE</h1>
-                <div class="flex items-center justify-center gap-4 mt-6">
-                    <div class="h-[1px] w-16 bg-brand-gold"></div><p class="font-body text-xs md:text-sm text-brand-gold tracking-[0.5em] uppercase font-bold">Visual Archive</p><div class="h-[1px] w-16 bg-brand-gold"></div>
-                </div>
+    <!-- SECTION 1: HERO CLOUD (Scroll Space) -->
+    <div class="relative w-full h-[250vh] bg-brand-bone hero-perspective" id="hero-track">
+        <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden" id="hero-stage">
+            
+            <!-- BRAND REVEAL (Behind Cloud) -->
+            <div class="text-center absolute z-0 opacity-0 scale-75" id="brand-reveal">
+                <h1 class="font-display font-black text-[15vw] text-brand-dark tracking-tighter uppercase leading-none select-none">OYANGE</h1>
+                <p class="font-body text-xs md:text-sm text-brand-gold tracking-[0.5em] uppercase font-bold mt-4">Visual Archive</p>
             </div>
+
+            <!-- THE CLOUD (Injected by JS) -->
             <div class="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center" id="stack-container"></div>
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center animate-float opacity-100 transition-opacity duration-300" id="scroll-prompt">
-                <span class="font-body text-[10px] uppercase tracking-widest mb-2 text-brand-dark font-bold">Explore</span><div class="w-[1px] h-12 bg-brand-dark"></div>
+
+            <!-- SCROLL HINT -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center" id="scroll-hint">
+                <span class="font-body text-[10px] uppercase tracking-widest mb-2 text-brand-dark font-bold">Explore</span>
+                <div class="w-[1px] h-12 bg-brand-dark/20"></div>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="relative z-20 bg-brand-bone rounded-t-[3rem] shadow-[0_-20px_60px_rgba(0,62,41,0.1)] pb-20 -mt-[20vh]">
+    <!-- SECTION 2: CONTENT & GRID -->
+    <main class="relative z-20 bg-brand-bone rounded-t-[3rem] shadow-[0_-50px_100px_rgba(0,62,41,0.15)] pb-20 -mt-[20vh] border-t border-brand-dark/5">
+        
+        <!-- FILTERS -->
         <div class="sticky top-8 z-30 flex justify-center pb-12 pt-12">
-            <div class="flex gap-2 overflow-x-auto p-2 no-scrollbar bg-brand-bone/90 backdrop-blur-md rounded-full px-4 shadow-lg border border-brand-dark/5" id="filter-container">
+            <div class="flex gap-2 overflow-x-auto p-2 no-scrollbar bg-brand-bone/90 backdrop-blur-md rounded-full px-4 shadow-lg border border-brand-dark/5">
                 <button onclick="filterSelection('all')" class="px-5 py-2 rounded-full bg-brand-dark text-white font-body text-[10px] uppercase tracking-widest hover:bg-brand-gold transition-colors interactive-element" data-magnetic="true">All</button>
                 <button onclick="filterSelection('Editorial')" class="px-5 py-2 rounded-full bg-transparent text-brand-dark border border-brand-dark/10 font-body text-[10px] uppercase tracking-widest hover:border-brand-gold hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">Editorial</button>
                 <button onclick="filterSelection('Portrait')" class="px-5 py-2 rounded-full bg-transparent text-brand-dark border border-brand-dark/10 font-body text-[10px] uppercase tracking-widest hover:border-brand-gold hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">Portrait</button>
             </div>
         </div>
 
+        <!-- VELOCITY GRID -->
         <section class="px-4 md:px-8 max-w-7xl mx-auto pb-32 min-h-screen">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start" id="gallery-container">
-                <div class="flex flex-col gap-8 velocity-col" id="col-1" data-speed="1.0"></div>
-                <div class="flex flex-col gap-8 velocity-col pt-0 md:pt-24" id="col-2" data-speed="0.85"></div>
-                <div class="flex flex-col gap-8 velocity-col pt-0 md:pt-12" id="col-3" data-speed="1.15"></div>
+                <div class="flex flex-col gap-8 velocity-col" id="col-1"></div>
+                <div class="flex flex-col gap-8 velocity-col pt-0 md:pt-24" id="col-2"></div>
+                <div class="flex flex-col gap-8 velocity-col pt-0 md:pt-12" id="col-3"></div>
             </div>
         </section>
 
+        <!-- FOOTER -->
         <footer class="bg-brand-dark text-white py-24 px-8 border-t border-white/5 rounded-t-[3rem]">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
                 <div><span class="block text-brand-gold font-body text-xs tracking-[0.25em] uppercase mb-4">Inquiries</span><a href="mailto:hello@oyange.com" class="font-display text-4xl md:text-6xl font-bold hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">hello@oyange.com</a></div>
@@ -105,7 +145,7 @@
                     <button onclick="toggleAdmin()" class="font-body text-xs uppercase tracking-widest hover:text-brand-gold interactive-element opacity-50 hover:opacity-100 flex items-center gap-2" data-magnetic="true"><span>🔒 Admin</span></button>
                 </div>
             </div>
-            <div class="mt-24 flex justify-between items-center text-[10px] font-body text-white/40 uppercase tracking-widest"><p>&copy; 2025 OYANGE Archive.</p></div>
+            <div class="mt-24 text-center text-[10px] font-body text-white/40 uppercase tracking-widest"><p>&copy; 2025 OYANGE Archive.</p></div>
         </footer>
     </main>
 
@@ -118,6 +158,7 @@
         <div class="p-8"><button onclick="addGalleryItem()" class="px-8 py-3 bg-white/10 text-white font-bold rounded hover:bg-brand-gold hover:text-brand-dark transition-colors interactive-element w-full">Add Demo Image</button></div>
     </div>
 
+    <!-- SCRIPTS -->
     <script src="js/cloudinary-helper.js"></script>
     <script src="js/main.js"></script>
     <script src="js/admin.js"></script>
