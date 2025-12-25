@@ -3,36 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Detail | OYANGE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Nairobi Noir | OYANGE</title>
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- TAILWIND -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config={theme:{extend:{colors:{brand:{dark:'#113827',gold:'#D4AF37',bone:'#F9F9F7'}},fontFamily:{display:['Syne'],body:['Inter']}}}}</script>
-    <style>body{cursor:none}.bg-noise{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")}.cursor-dot,.cursor-outline{position:fixed;top:0;left:0;transform:translate(-50%,-50%);border-radius:50%;z-index:9999;pointer-events:none}.cursor-dot{width:8px;height:8px;background-color:#D4AF37}.cursor-outline{width:40px;height:40px;border:1px solid #113827;transition:.2s}body.hovering .cursor-outline{width:60px;height:60px;background-color:rgba(212,175,55,.1);border-color:#D4AF37}.fade-in-up{opacity:0;transform:translateY(20px);animation:fadeInUp .8s forwards}@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}</style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { brand: { dark: '#003E29', gold: '#D4AF37', bone: '#F3F4F1', gray: '#E5E5E5' } },
+            fontFamily: { display: ['Syne', 'sans-serif'], body: ['Inter', 'sans-serif'] },
+            borderRadius: { DEFAULT: '2px' }
+          }
+        }
+      }
+    </script>
+
+    <style>
+        body { cursor: none; -webkit-font-smoothing: antialiased; background-color: #F3F4F1; }
+        @media (max-width: 768px) { body { cursor: auto; } .cursor-dot, .cursor-outline { display: none !important; } }
+        
+        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        
+        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
+        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); }
+        .loader-bar { width: 0%; height: 100%; background-color: #D4AF37; }
+        
+        /* Parallax Header */
+        .project-hero { clip-path: inset(0 0 0 0); }
+        .project-img { will-change: transform; }
+    </style>
 </head>
-<body class="bg-brand-bone text-brand-dark">
-    <div class="bg-noise"></div><div class="cursor-dot" id="cursor-dot"></div><div class="cursor-outline" id="cursor-outline"></div>
-    <div id="loader" class="fixed inset-0 z-[100] bg-brand-dark flex flex-col items-center justify-center transition-transform duration-700 ease-in-out"></div>
-    <nav class="fixed top-0 left-0 w-full z-50 py-8 px-8 flex justify-between mix-blend-difference text-brand-bone">
-        <a href="index.html" class="font-display font-bold text-xl tracking-widest interactive-element">OYANGE</a>
-        <a href="index.html" class="font-body text-xs font-bold uppercase tracking-widest hover:text-brand-gold interactive-element">Close</a>
+<body class="bg-brand-bone text-brand-dark selection:bg-brand-gold selection:text-white">
+
+    <div class="bg-noise"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- LOADER -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center">
+        <div class="overflow-hidden mb-8">
+            <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest translate-y-full" id="loader-text">PROJECT</h1>
+        </div>
+        <div class="w-64 h-[2px] bg-brand-dark/10 rounded-full overflow-hidden">
+            <div class="loader-bar" id="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-20">
+        <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2">
+            <a href="index.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">Close</a>
+        </div>
     </nav>
-    <header class="w-full h-[80vh] relative"><img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1600" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 p-8 md:p-16"><h1 class="font-display text-6xl md:text-8xl text-white font-bold uppercase tracking-tighter fade-in-up" style="animation-delay:.2s">Nairobi Noir</h1></div></header>
-    <main class="max-w-7xl mx-auto px-6 md:px-12 py-24">
+
+    <!-- HERO IMAGE -->
+    <header class="w-full h-[80vh] relative overflow-hidden project-hero bg-brand-dark/20">
+        <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1600" class="project-img w-full h-[120%] object-cover absolute top-0 left-0">
+        <div class="absolute bottom-0 left-0 p-8 md:p-16 w-full bg-gradient-to-t from-brand-dark/50 to-transparent">
+            <h1 class="font-display text-6xl md:text-8xl text-white font-bold uppercase tracking-tighter opacity-0 translate-y-12" id="project-title">Nairobi Noir</h1>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-24 min-h-screen">
         <div class="grid md:grid-cols-12 gap-12">
-            <div class="md:col-span-4 fade-in-up" style="animation-delay:.4s"><p class="font-body text-sm leading-relaxed">To capture the juxtaposition of modern architecture and traditional textures.</p></div>
-            <div class="md:col-span-8 fade-in-up" style="animation-delay:.6s"><p class="font-display text-2xl md:text-3xl">"We wanted to strip away the color to reveal the raw geometry."</p></div>
+            <div class="md:col-span-4 opacity-0 translate-y-8" id="project-meta">
+                <p class="font-body text-sm leading-relaxed text-brand-dark/60">
+                    <strong class="block text-brand-dark uppercase tracking-widest text-[10px] mb-2">Client</strong> Vogue Africa
+                    <br><br>
+                    <strong class="block text-brand-dark uppercase tracking-widest text-[10px] mb-2">Year</strong> 2025
+                </p>
+            </div>
+            <div class="md:col-span-8 opacity-0 translate-y-8" id="project-desc">
+                <p class="font-display text-2xl md:text-3xl leading-tight">"We wanted to strip away the color to reveal the raw geometry of the city. To capture the juxtaposition of modern architecture and traditional textures."</p>
+            </div>
         </div>
+
         <div class="mt-24 grid md:grid-cols-2 gap-8">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" class="w-full aspect-[3/4] object-cover fade-in-up interactive-element" style="animation-delay:.8s">
-            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800" class="w-full aspect-[3/4] object-cover fade-in-up interactive-element" style="animation-delay:1s">
+            <div class="overflow-hidden bg-brand-dark/10 rounded-sm aspect-[3/4] opacity-0 translate-y-16 project-gallery-item">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000">
+            </div>
+            <div class="overflow-hidden bg-brand-dark/10 rounded-sm aspect-[3/4] opacity-0 translate-y-16 project-gallery-item md:mt-24">
+                <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000">
+            </div>
         </div>
-        <div class="mt-32 border-t border-brand-dark/10 pt-16 flex justify-between items-center">
-            <a href="index.html" class="text-xs font-body uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element">Back to Home</a>
-            <a href="#" class="group text-right interactive-element"><span class="block text-xs font-body text-brand-gold uppercase tracking-widest mb-1">Next Project</span><span class="font-display text-4xl font-bold group-hover:underline decoration-brand-gold underline-offset-4">The Elder</span></a>
+
+        <div class="mt-32 border-t border-brand-dark/10 pt-16 flex justify-between items-center opacity-0" id="project-footer">
+            <a href="index.html" class="text-xs font-body uppercase tracking-widest hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">Back to Archive</a>
+            <a href="#" class="group text-right interactive-element" data-magnetic="true">
+                <span class="block text-xs font-body text-brand-gold uppercase tracking-widest mb-1">Next Project</span>
+                <span class="font-display text-4xl font-bold group-hover:underline decoration-brand-gold underline-offset-4">The Elder</span>
+            </a>
         </div>
     </main>
-    <footer class="bg-brand-dark text-white py-12 px-8 text-center"><p class="text-[10px] font-body text-white/40 uppercase tracking-widest">&copy; 2025 OYANGE Archive.</p></footer>
+
     <script src="js/main.js"></script>
-    <script>window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').style.transform='translateY(-100%)'},500)});const cdp=document.getElementById('cursor-dot'),cop=document.getElementById('cursor-outline');window.addEventListener('mousemove',e=>{if(cdp){cdp.style.left=`${e.clientX}px`;cdp.style.top=`${e.clientY}px`;}if(cop){cop.animate({left:`${e.clientX}px`,top:`${e.clientY}px`},{duration:500,fill:"forwards"})}});</script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        window.addEventListener('load', () => {
+            // Parallax Header
+            gsap.to(".project-img", {
+                yPercent: -20,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "header",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Reveal Content
+            const tl = gsap.timeline();
+            tl.to("#project-title", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 2.2 })
+              .to("#project-meta", { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+              .to("#project-desc", { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
+
+            // Scroll Reveal Gallery
+            gsap.utils.toArray(".project-gallery-item").forEach(item => {
+                gsap.to(item, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%"
+                    }
+                });
+            });
+            
+            gsap.to("#project-footer", {
+                opacity: 1,
+                scrollTrigger: { trigger: "#project-footer", start: "top 90%" }
+            });
+        });
+    </script>
 </body>
 </html>
