@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | OYANGE</title>
+    <meta name="description" content="Contact OYANGE Visual Archive. Get in touch for photography commissions, collaborations, or inquiries.">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- GSAP -->
@@ -19,8 +23,18 @@
       tailwind.config = {
         theme: {
           extend: {
-            colors: { brand: { dark: '#003E29', gold: '#D4AF37', bone: '#F3F4F1', gray: '#E5E5E5' } },
-            fontFamily: { display: ['Syne', 'sans-serif'], body: ['Inter', 'sans-serif'] },
+            colors: { 
+                brand: { 
+                    dark: '#003E29', 
+                    gold: '#D4AF37', 
+                    bone: '#F3F4F1', 
+                    gray: '#E5E5E5' 
+                } 
+            },
+            fontFamily: { 
+                display: ['Syne', 'sans-serif'], 
+                body: ['Inter', 'sans-serif'] 
+            },
             borderRadius: { DEFAULT: '2px' }
           }
         }
@@ -28,26 +42,113 @@
     </script>
 
     <style>
-        body { cursor: none; -webkit-font-smoothing: antialiased; background-color: #F3F4F1; }
-        @media (max-width: 768px) { body { cursor: auto; } .cursor-dot, .cursor-outline { display: none !important; } }
-        .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        body { 
+            cursor: none; 
+            -webkit-font-smoothing: antialiased; 
+            background-color: #F3F4F1; 
+        }
         
-        .cursor-dot { position: fixed; width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
-        .cursor-outline { position: fixed; width: 40px; height: 40px; border: 1px solid #003E29; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); }
+        @media (max-width: 768px) { 
+            body { cursor: auto; } 
+            .cursor-dot, .cursor-outline { display: none !important; } 
+        }
+        
+        .bg-noise { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 50; 
+            opacity: 0.035; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
+        }
+        
+        .cursor-dot { 
+            position: fixed; 
+            width: 8px; 
+            height: 8px; 
+            background-color: #D4AF37; 
+            border-radius: 50%; 
+            z-index: 9999; 
+            pointer-events: none; 
+            transform: translate(-50%, -50%); 
+        }
+        
+        .cursor-outline { 
+            position: fixed; 
+            width: 40px; 
+            height: 40px; 
+            border: 1px solid #003E29; 
+            border-radius: 50%; 
+            z-index: 9998; 
+            pointer-events: none; 
+            transform: translate(-50%, -50%); 
+        }
+        
         .loader-bar { width: 0%; height: 100%; background-color: #D4AF37; }
         
-        input, textarea, select { background: transparent; transition: all 0.3s; border-radius: 0; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: #D4AF37; padding-left: 10px; }
+        /* Form focus styles */
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #D4AF37;
+            outline-offset: 2px;
+        }
+        
+        /* Accessibility focus styles */
+        a:focus, button:focus {
+            outline: 2px solid #D4AF37;
+            outline-offset: 2px;
+        }
+        
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #003E29;
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Form validation styles */
+        .input-error {
+            border-color: #ef4444;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Success message */
+        .success-message {
+            background-color: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body class="bg-brand-bone text-brand-dark selection:bg-brand-gold selection:text-white">
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <div class="bg-noise"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
     <!-- LOADER -->
-    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center">
+    <div id="loader" class="fixed inset-0 z-[100] bg-brand-bone flex flex-col items-center justify-center" role="status" aria-label="Loading">
         <div class="overflow-hidden mb-8">
             <h1 class="font-display font-bold text-6xl text-brand-dark tracking-widest translate-y-full" id="loader-text">CONTACT</h1>
         </div>
@@ -56,48 +157,215 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAV -->
-    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-20">
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex justify-center opacity-0 translate-y-20" role="navigation" aria-label="Main navigation">
         <div class="pointer-events-auto bg-brand-dark/90 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center gap-2">
-            <a href="index.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">Work</a>
+            <a href="index.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">Work</a>
             <a href="about.html" class="px-6 py-3 rounded-full text-white font-display font-bold text-xs uppercase tracking-widest hover:text-brand-gold transition-colors" data-magnetic="true">About</a>
-            <a href="contact.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true">Contact</a>
+            <a href="contact.html" class="px-6 py-3 rounded-full bg-brand-gold text-brand-dark font-display font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors" data-magnetic="true" aria-current="page">Contact</a>
         </div>
     </nav>
 
-    <!-- CONTENT -->
-    <main class="flex-grow flex flex-col justify-center max-w-7xl mx-auto w-full px-6 md:px-12 pt-32 pb-32">
-        <div class="mb-16 md:mb-24 opacity-0 translate-y-8" id="contact-header">
-             <h1 class="font-display text-5xl md:text-7xl font-bold mb-6">Let's Create.</h1>
-             <p class="font-body text-lg md:text-xl text-brand-dark/70 max-w-2xl leading-relaxed">Reach out for collaborations, commissions, or just to say hello.</p>
-        </div>
-
-        <div class="grid md:grid-cols-12 gap-12 md:gap-24 items-start opacity-0 translate-y-8" id="contact-form">
-             <div class="md:col-span-7">
-                <!-- FORMSPREE: Add your ID below -->
-                <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-10">
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Name</label><input type="text" name="name" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element" placeholder="Your Name"></div>
-                        <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Email</label><input type="email" name="email" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element" placeholder="email@example.com"></div>
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
+            
+            <!-- CONTACT INFO -->
+            <div class="opacity-0 translate-y-8" id="contact-info">
+                <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-8">
+                    GET IN <br/> 
+                    <span class="text-brand-gold italic">TOUCH.</span>
+                </h1>
+                <div class="w-24 h-[1px] bg-brand-dark mb-12"></div>
+                
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="font-body text-xs uppercase tracking-widest text-brand-dark/50 mb-2">Email</h2>
+                        <a href="mailto:hello@oyange.com" class="font-body text-xl text-brand-dark hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">hello@oyange.com</a>
                     </div>
-                    <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Subject</label><select name="subject" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-display text-xl interactive-element bg-transparent appearance-none rounded-none"><option>Project Inquiry</option><option>Press / Media</option><option>Collaboration</option></select></div>
-                    <div class="space-y-2 group"><label class="font-body text-[10px] uppercase tracking-widest text-brand-dark/40">Message</label><textarea name="message" rows="4" class="w-full border-b border-brand-dark/20 py-3 text-brand-dark font-body text-lg interactive-element resize-none leading-relaxed" placeholder="Tell us about your project..."></textarea></div>
-                    <div class="pt-6"><button type="submit" class="group relative px-10 py-4 bg-brand-dark text-white font-body text-xs uppercase tracking-[0.2em] interactive-element hover:bg-brand-gold transition-colors w-full md:w-auto" data-magnetic="true">Send Message</button></div>
-                </form>
-             </div>
-            <div class="md:col-span-5 space-y-16">
-                <div><span class="block text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-4 font-bold">Location</span><p class="font-display text-2xl md:text-3xl">Nairobi, Kenya</p></div>
-                <div class="bg-white border border-brand-dark/5 p-6 shadow-sm"><span class="flex items-center gap-2 text-brand-gold font-body text-[10px] tracking-[0.25em] uppercase mb-3 font-bold"><span class="w-2 h-2 bg-brand-gold rounded-full animate-pulse"></span>Available</span><p class="font-body text-sm text-brand-dark/70">Response time: 24-48 hours.</p></div>
+                    
+                    <div>
+                        <h2 class="font-body text-xs uppercase tracking-widest text-brand-dark/50 mb-2">Phone</h2>
+                        <a href="tel:+254700123456" class="font-body text-xl text-brand-dark hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">+254 700 123 456</a>
+                    </div>
+                    
+                    <div>
+                        <h2 class="font-body text-xs uppercase tracking-widest text-brand-dark/50 mb-2">Studio</h2>
+                        <address class="font-body text-xl text-brand-dark not-italic">
+                            Nairobi, Kenya<br>
+                            By appointment only
+                        </address>
+                    </div>
+                    
+                    <div>
+                        <h2 class="font-body text-xs uppercase tracking-widest text-brand-dark/50 mb-4">Follow</h2>
+                        <div class="flex gap-4">
+                            <a href="#" class="font-body text-sm uppercase tracking-widest text-brand-dark hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">Instagram</a>
+                            <a href="#" class="font-body text-sm uppercase tracking-widest text-brand-dark hover:text-brand-gold transition-colors interactive-element" data-magnetic="true">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <div class="pt-8 md:pt-24">
+                <div class="bg-white rounded-sm p-8 md:p-12 shadow-lg opacity-0 translate-y-8" id="contact-form-container">
+                    <div id="form-message" class="hidden"></div>
+                    
+                    <form id="contact-form" class="space-y-6" novalidate>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block font-body text-sm uppercase tracking-widest text-brand-dark/70 mb-2">Name *</label>
+                                <input type="text" 
+                                       id="name" 
+                                       name="name" 
+                                       class="w-full px-4 py-3 bg-brand-bone border border-brand-dark/20 rounded-sm focus:border-brand-gold transition-colors"
+                                       required
+                                       aria-required="true">
+                                <div class="error-message" id="name-error"></div>
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block font-body text-sm uppercase tracking-widest text-brand-dark/70 mb-2">Email *</label>
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       class="w-full px-4 py-3 bg-brand-bone border border-brand-dark/20 rounded-sm focus:border-brand-gold transition-colors"
+                                       required
+                                       aria-required="true">
+                                <div class="error-message" id="email-error"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block font-body text-sm uppercase tracking-widest text-brand-dark/70 mb-2">Subject</label>
+                            <select id="subject" 
+                                    name="subject" 
+                                    class="w-full px-4 py-3 bg-brand-bone border border-brand-dark/20 rounded-sm focus:border-brand-gold transition-colors">
+                                <option value="">Select a subject</option>
+                                <option value="commission">Commission</option>
+                                <option value="collaboration">Collaboration</option>
+                                <option value="licensing">Image Licensing</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block font-body text-sm uppercase tracking-widest text-brand-dark/70 mb-2">Message *</label>
+                            <textarea id="message" 
+                                      name="message" 
+                                      rows="6" 
+                                      class="w-full px-4 py-3 bg-brand-bone border border-brand-dark/20 rounded-sm focus:border-brand-gold transition-colors resize-none"
+                                      required
+                                      aria-required="true"></textarea>
+                            <div class="error-message" id="message-error"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs text-brand-dark/50">* Required fields</p>
+                            <button type="submit" 
+                                    class="px-8 py-3 bg-brand-dark text-white font-body text-sm uppercase tracking-widest rounded-sm hover:bg-brand-gold hover:text-brand-dark transition-colors interactive-element"
+                                    data-magnetic="true">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
 
     <script src="js/main.js"></script>
     <script>
-        // PAGE ANIMATION
-        window.addEventListener('load', () => {
-            gsap.to("#contact-header", { opacity: 1, y: 0, duration: 1, delay: 2.2, ease: "power3.out" });
-            gsap.to("#contact-form", { opacity: 1, y: 0, duration: 1, delay: 2.4, ease: "power3.out" });
+        // Contact form handling
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for main app to initialize
+            setTimeout(() => {
+                // Animate in content
+                gsap.to("#contact-info", { opacity: 1, y: 0, duration: 1, delay: 2.2, ease: "power3.out" });
+                gsap.to("#contact-form-container", { opacity: 1, y: 0, duration: 1, delay: 2.4, ease: "power3.out" });
+                
+                // Form validation and submission
+                const form = document.getElementById('contact-form');
+                const formMessage = document.getElementById('form-message');
+                
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        // Clear previous errors
+                        document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+                        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                        
+                        // Validate form
+                        let isValid = true;
+                        const formData = new FormData(form);
+                        
+                        // Validate name
+                        const name = formData.get('name').trim();
+                        if (!name) {
+                            document.getElementById('name-error').textContent = 'Name is required';
+                            document.getElementById('name').classList.add('input-error');
+                            isValid = false;
+                        }
+                        
+                        // Validate email
+                        const email = formData.get('email').trim();
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!email) {
+                            document.getElementById('email-error').textContent = 'Email is required';
+                            document.getElementById('email').classList.add('input-error');
+                            isValid = false;
+                        } else if (!emailRegex.test(email)) {
+                            document.getElementById('email-error').textContent = 'Please enter a valid email';
+                            document.getElementById('email').classList.add('input-error');
+                            isValid = false;
+                        }
+                        
+                        // Validate message
+                        const message = formData.get('message').trim();
+                        if (!message) {
+                            document.getElementById('message-error').textContent = 'Message is required';
+                            document.getElementById('message').classList.add('input-error');
+                            isValid = false;
+                        }
+                        
+                        if (isValid) {
+                            // Show loading state
+                            const submitBtn = form.querySelector('button[type="submit"]');
+                            const originalText = submitBtn.textContent;
+                            submitBtn.textContent = 'Sending...';
+                            submitBtn.disabled = true;
+                            
+                            // Simulate form submission (replace with actual endpoint)
+                            setTimeout(() => {
+                                // Show success message
+                                formMessage.innerHTML = `
+                                    <div class="success-message">
+                                        Thank you for your message! We'll get back to you within 24 hours.
+                                    </div>
+                                `;
+                                formMessage.classList.remove('hidden');
+                                
+                                // Reset form
+                                form.reset();
+                                
+                                // Reset button
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                                
+                                // Scroll to message
+                                formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                
+                                // Hide message after 5 seconds
+                                setTimeout(() => {
+                                    formMessage.classList.add('hidden');
+                                }, 5000);
+                            }, 1500);
+                        }
+                    });
+                }
+            }, 1000);
         });
     </script>
 </body>
