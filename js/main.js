@@ -1,8 +1,15 @@
 /**
- * OYANGE: VISUAL ENGINE (Refined)
+ * OYANGE: VISUAL ENGINE (GSAP S-Tier Edition)
+ * 
+ * 📦 REQUIRED CDN (Add to HTML):
+ * <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+ * <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
  */
 
+// ============================================================
 // 1. DATA CONFIG
+// ============================================================
+
 const heroData=[{src:"https://images.unsplash.com/photo-1504194921103-f8b80cadd5e4?q=80&w=800",pos:"left-[5%] top-[20%]",size:"w-48 md:w-60 aspect-[3/4]",z:"z-10",speedX:-3,speedY:-.5,rotate:-15,delay:2,filter:"grayscale-[0.5]"},{src:"https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=800",pos:"left-[2%] top-[60%]",size:"w-52 md:w-64 aspect-square",z:"z-20",speedX:-2.8,speedY:.8,rotate:-8,delay:.5,filter:"filter sepia-[0.3]"},{src:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",pos:"left-[20%] top-[30%]",size:"w-52 md:w-64 aspect-square",z:"z-40",speedX:-1.8,speedY:-.5,rotate:-5,delay:0,filter:"filter brightness-90 grayscale-[0.2]"},{src:"https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=800",pos:"left-[18%] top-[55%]",size:"w-60 md:w-80 aspect-[3/4]",z:"z-30",speedX:-2.2,speedY:.5,rotate:5,delay:1,filter:""},{src:"https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800",pos:"left-[30%] top-[45%]",size:"w-48 md:w-60 aspect-[3/4]",z:"z-20",speedX:-1.2,speedY:0,rotate:-2,delay:2,filter:"grayscale-[0.4]"},{src:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",pos:"left-[50%] top-[40%]",size:"w-64 md:w-80 aspect-[4/5]",z:"z-50",speedX:-.8,speedY:-1.5,rotate:-2,delay:4,filter:"",style:"margin-left: -50%;"},{src:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800",pos:"left-[50%] top-[55%]",size:"w-56 md:w-72 aspect-[4/3]",z:"z-50",speedX:.8,speedY:1.5,rotate:0,delay:1.5,filter:"filter sepia-[0.1]",style:"margin-left: -50%;"},{src:"https://images.unsplash.com/photo-1547471080-7541fbe112da?q=80&w=800",pos:"right-[20%] top-[25%]",size:"w-52 md:w-64 aspect-square",z:"z-40",speedX:1.8,speedY:-.5,rotate:8,delay:3,filter:"filter sepia-[0.2]"},{src:"https://images.unsplash.com/photo-1523805009345-7448845a9e53?q=80&w=800",pos:"right-[18%] top-[55%]",size:"w-60 md:w-80 aspect-[3/4]",z:"z-30",speedX:2.2,speedY:.5,rotate:12,delay:.5,filter:"grayscale-[0.3]"},{src:"https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800",pos:"right-[30%] top-[40%]",size:"w-48 md:w-60 aspect-[3/4]",z:"z-20",speedX:1.2,speedY:0,rotate:3,delay:2.5,filter:""},{src:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800",pos:"right-[5%] top-[65%]",size:"w-56 md:w-72 aspect-[4/3]",z:"z-10",speedX:3,speedY:1.2,rotate:20,delay:4,filter:""},{src:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800",pos:"right-[2%] top-[15%]",size:"w-48 md:w-60 aspect-[3/4]",z:"z-20",speedX:2.8,speedY:-.8,rotate:25,delay:1.5,filter:"grayscale-[0.6]"}];
 
 const defaultGallery = [
@@ -22,7 +29,10 @@ if (!galleryData || galleryData.length === 0) {
     galleryData = defaultGallery;
 }
 
-// 2. RENDER FUNCTIONS
+// ============================================================
+// 2. RENDER FUNCTIONS (PRESERVED)
+// ============================================================
+
 function renderHero() {
     const container = document.getElementById('stack-container');
     if (!container) return; 
@@ -40,20 +50,16 @@ function renderHero() {
 
 function renderGallery(filter = 'all') {
     const cols = [document.getElementById('col-1'), document.getElementById('col-2'), document.getElementById('col-3')];
-    if (!cols[0]) return; // Stop if columns don't exist
+    if (!cols[0]) return;
 
-    // Clear columns
     cols.forEach(c => c.innerHTML = '');
     
-    // Filter Data
     const filteredData = filter === 'all' ? galleryData : galleryData.filter(item => 
         item.cat.toLowerCase().includes(filter.toLowerCase()) || 
         item.title.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // Distribution Logic
     filteredData.forEach((item, index) => {
-        // Assign Random Aspect Ratio for the Skeleton (prevents collapse)
         const aspects = ['aspect-[3/4]', 'aspect-[4/5]', 'aspect-square'];
         const randomAspect = aspects[index % 3]; 
 
@@ -72,7 +78,6 @@ function renderGallery(filter = 'all') {
             </div>
         </div>`;
         
-        // Add to the shortest column or sequentially
         cols[index % 3].innerHTML += cardHTML;
     });
     
@@ -83,7 +88,10 @@ function filterSelection(category) {
     renderGallery(category);
 }
 
-// 3. INTERACTION PHYSICS
+// ============================================================
+// 3. INTERACTION PHYSICS (PRESERVED)
+// ============================================================
+
 const cursorDot = document.getElementById('cursor-dot');
 const cursorOutline = document.getElementById('cursor-outline');
 let mouseX = 0, mouseY = 0;
@@ -92,7 +100,6 @@ window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX; 
     mouseY = e.clientY;
     
-    // Simple Cursor Follow
     if(cursorDot) { 
         cursorDot.style.left = `${mouseX}px`;
         cursorDot.style.top = `${mouseY}px`;
@@ -105,7 +112,6 @@ window.addEventListener('mousemove', (e) => {
         }, { duration: 500, fill: "forwards" });
     }
     
-    // Magnetic Logic
     const magneticTarget = e.target.closest('[data-magnetic="true"]');
     if(magneticTarget) {
         const rect = magneticTarget.getBoundingClientRect();
@@ -128,64 +134,212 @@ function bindInteractives() {
     });
 }
 
-// 4. ANIMATION LOOP
-const brandReveal = document.getElementById('brand-reveal');
-const navbar = document.getElementById('navbar');
-let currentScroll = 0, targetScroll = 0;
+// ============================================================
+// 4. GSAP ANIMATIONS (APPLE-LEVEL SMOOTHNESS)
+// ============================================================
 
-window.addEventListener('scroll', () => { targetScroll = window.scrollY; });
+function initBrandReveal() {
+    const brandReveal = document.getElementById('brand-reveal');
+    if (!brandReveal) return;
 
-function animate() {
-    currentScroll += (targetScroll - currentScroll) * 0.08; // Smooth Lerp
-    
-    // VELOCITY GRID PARALLAX
-    const col2 = document.getElementById('col-2');
-    const col3 = document.getElementById('col-3');
-    
-    // Check if on mobile
-    if(window.innerWidth > 768) {
-        if(col2) col2.style.transform = `translateY(${currentScroll * 0.05}px)`;
-        if(col3) col3.style.transform = `translateY(-${currentScroll * 0.05}px)`;
-        
-        // Hero Dispersal
-        const wrappers = document.querySelectorAll('.hero-card-wrapper');
-        wrappers.forEach(wrapper => {
-            const speedX = parseFloat(wrapper.dataset.speedX);
-            const speedY = parseFloat(wrapper.dataset.speedY);
-            wrapper.style.transform = `translate3d(${speedX * currentScroll * 0.5}px, ${speedY * currentScroll * 0.5}px, 0) rotate(${wrapper.dataset.initialRotate}deg)`;
-        });
-    }
+    // Split text into characters
+    const text = brandReveal.textContent.trim();
+    brandReveal.innerHTML = '';
 
-    // Nav Reveal
-    if (navbar) {
-        if (targetScroll > 100) {
-            navbar.style.opacity = '1';
-            navbar.style.transform = 'translate(-50%, 0)';
-        } else {
-            navbar.style.opacity = '0';
-            navbar.style.transform = 'translate(-50%, 40px)'; // Hide down
-        }
-    }
+    text.split('').forEach((char) => {
+        const span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.style.display = 'inline-block';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(120px)';
+        brandReveal.appendChild(span);
+    });
 
-    requestAnimationFrame(animate);
+    const chars = brandReveal.querySelectorAll('span');
+
+    // Staggered reveal animation
+    gsap.to(chars, {
+        y: 0,
+        opacity: 1,
+        duration: 1.4,
+        ease: 'power4.out',
+        stagger: {
+            amount: 0.6,
+            from: 'start'
+        },
+        delay: 0.5
+    });
 }
 
-// 5. INIT
+function initHeroDispersalGSAP() {
+    if (window.innerWidth <= 768) return;
+
+    const wrappers = document.querySelectorAll('.hero-card-wrapper');
+    if (!wrappers.length) return;
+
+    // Create timeline with scrub for buttery smoothness
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '#stack-container',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1, // 🔑 1-second lag = liquid smooth
+            // markers: true // Uncomment for debugging
+        }
+    });
+
+    wrappers.forEach((wrapper) => {
+        const speedX = parseFloat(wrapper.dataset.speedX);
+        const speedY = parseFloat(wrapper.dataset.speedY);
+        const initialRotate = parseFloat(wrapper.dataset.initialRotate);
+
+        // Amplify movement for dramatic dispersal
+        tl.to(wrapper, {
+            x: speedX * 150, // Increased multiplier for explosive effect
+            y: speedY * 150,
+            rotation: initialRotate + (speedX * 5), // Add dynamic rotation
+            scale: 0.85,
+            opacity: 0.6,
+            ease: 'power2.out'
+        }, 0); // All start at position 0 (simultaneous)
+    });
+}
+
+function initVelocityGridGSAP() {
+    if (window.innerWidth <= 768) return;
+
+    const col1 = document.getElementById('col-1');
+    const col2 = document.getElementById('col-2');
+    const col3 = document.getElementById('col-3');
+
+    if (!col1 || !col2 || !col3) return;
+
+    // Column 2: Moves DOWN
+    gsap.to(col2, {
+        y: 150,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.gallery-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+
+    // Columns 1 & 3: Move UP (opposite direction)
+    gsap.to([col1, col3], {
+        y: -80,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.gallery-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+}
+
+function initNavbarReveal() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+
+    // Set initial state
+    gsap.set(navbar, { 
+        opacity: 0, 
+        y: 40 
+    });
+
+    // Create reveal animation tied to scroll
+    ScrollTrigger.create({
+        start: 'top top',
+        end: 99999,
+        onUpdate: (self) => {
+            const progress = self.progress;
+            const scrollY = window.scrollY;
+            
+            if (scrollY > 100) {
+                gsap.to(navbar, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: 'power3.out'
+                });
+            } else {
+                gsap.to(navbar, {
+                    opacity: 0,
+                    y: 40,
+                    duration: 0.4,
+                    ease: 'power2.in'
+                });
+            }
+        }
+    });
+}
+
+// ============================================================
+// 5. INITIALIZATION
+// ============================================================
+
+function initGSAP() {
+    // Register plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initialize all GSAP animations
+    initBrandReveal();
+    initHeroDispersalGSAP();
+    initVelocityGridGSAP();
+    initNavbarReveal();
+
+    // Refresh on resize (with debounce)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth <= 768) {
+                ScrollTrigger.getAll().forEach(st => st.kill());
+            } else {
+                ScrollTrigger.refresh();
+                // Re-init animations for desktop
+                initHeroDispersalGSAP();
+                initVelocityGridGSAP();
+            }
+        }, 250);
+    });
+}
+
+// ============================================================
+// 6. MASTER INIT
+// ============================================================
+
 window.addEventListener('load', () => {
-    // RESET BAD DATA ON LOAD
+    // Reset/Initialize localStorage
     if(!localStorage.getItem('oyange_gallery')) {
         localStorage.setItem('oyange_gallery', JSON.stringify(defaultGallery));
     }
 
+    // Render content
     renderHero();
     renderGallery();
     
+    // Loader fade out
     const loader = document.getElementById('loader');
     if(loader) {
-        setTimeout(() => { 
-            loader.style.opacity = '0'; 
-            setTimeout(() => loader.style.display = 'none', 800); 
-        }, 1500);
+        gsap.to(loader, {
+            opacity: 0,
+            duration: 0.8,
+            delay: 1.5,
+            onComplete: () => {
+                loader.style.display = 'none';
+            }
+        });
     }
-    animate();
+
+    // Initialize GSAP animations
+    initGSAP();
 });
+
+// Expose global API for dynamic updates
+window.OYANGE = {
+    refresh: () => ScrollTrigger.refresh(),
+    filterGallery: (cat) => filterSelection(cat)
+};
